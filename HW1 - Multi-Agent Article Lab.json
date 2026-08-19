@@ -1,0 +1,872 @@
+{
+  "name": "HW1 - Multi-Agent Article Lab",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "وش المقال اللي تبيه؟",
+        "formDescription": "اكتب الموضوع وأنا أجهزه لك.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "موضوع المقال",
+              "placeholder": "مثال: كيف يغيّر الذكاء الاصطناعي التوليدي طريقة المذاكرة في الجامعة",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "نوع المقال",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "مقال مدوّنة"
+                  },
+                  {
+                    "option": "مقال رأي"
+                  },
+                  {
+                    "option": "دليل عملي (How-to)"
+                  },
+                  {
+                    "option": "تحليل إخباري"
+                  },
+                  {
+                    "option": "مقال تعريفي/تثقيفي"
+                  },
+                  {
+                    "option": "قائمة (Listicle)"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "النقاط المطلوب تغطيتها",
+              "fieldType": "textarea",
+              "placeholder": "افصلي بين النقاط بفاصلة، مثال: أدوات المذاكرة الذكية، مخاطر الاعتماد الزائد، نصائح للاستخدام المتوازن",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "الجمهور المستهدف",
+              "placeholder": "مثال: طالبات جامعيات، قرّاء عامّون، مبتدئون في المجال"
+            },
+            {
+              "fieldLabel": "نبرة الكتابة",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "ودّية وبسيطة"
+                  },
+                  {
+                    "option": "احترافية رصينة"
+                  },
+                  {
+                    "option": "تحفيزية"
+                  },
+                  {
+                    "option": "ساخرة خفيفة"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "اللغة",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "العربية"
+                  },
+                  {
+                    "option": "English"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "عدد الكلمات التقريبي",
+              "fieldType": "number",
+              "placeholder": "900",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "تشغيل فريق التحرير",
+          "customCss": "@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');\n\n:root{\n  --ink:#e8eefb; --muted:#8ea3c2; --dim:#63799b;\n  --panel:#0f1826; --field:#0a1220; --line:#1e2c42;\n  --cyan:#22d3ee; --violet:#a78bfa;\n}\n\nbody{\n  background:\n    radial-gradient(1100px 620px at 78% -12%, #1a2c4a 0%, rgba(7,12,21,0) 62%),\n    radial-gradient(900px 520px at 8% 108%, #221a3d 0%, rgba(7,12,21,0) 60%),\n    #070c15;\n  background-attachment:fixed;\n  color:var(--ink);\n  font-family:'IBM Plex Sans Arabic', system-ui, sans-serif;\n  padding:44px 18px;\n}\n\n.container{ max-width:700px; margin:0 auto; }\n\n.card{\n  background:var(--panel);\n  border:1px solid var(--line);\n  border-radius:20px;\n  padding:36px 32px 30px;\n  box-shadow:0 28px 70px rgba(0,0,0,.55);\n  direction:rtl; text-align:right;\n  position:relative; overflow:hidden;\n}\n.card::before{\n  content:''; position:absolute; top:0; right:0; left:0; height:3px;\n  background:linear-gradient(90deg, var(--cyan), var(--violet));\n}\n\n.form-header::before{\n  content:'HW1 · MULTI-AGENT ARTICLE LAB';\n  display:inline-block; direction:ltr;\n  font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.16em;\n  color:var(--cyan); background:rgba(34,211,238,.08);\n  border:1px solid rgba(34,211,238,.32); border-radius:999px;\n  padding:5px 11px; margin-bottom:16px;\n}\n.form-header h1{\n  margin:0 0 10px; color:#fff; font-size:26px; font-weight:700; line-height:1.5;\n}\n.form-header p{\n  margin:0; color:var(--muted); font-size:14px; line-height:1.95;\n}\n.form-header::after{\n  content:'Intake → Lead Editor → Outline ⇄ Review → Article Writer ⇄ QA → Handover';\n  display:block; direction:ltr; text-align:left;\n  margin-top:20px; padding-top:16px; border-top:1px dashed var(--line);\n  font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.05em;\n  color:var(--dim);\n}\n\n.inputs-wrapper{ counter-reset: fld; margin-top:8px; }\n\n.form-group{ counter-increment: fld; margin-top:24px; }\n\n.form-label{\n  display:flex; align-items:center; gap:9px;\n  margin-bottom:9px; color:#cfdcef; font-size:13.5px; font-weight:600;\n}\n.form-label::before{\n  content:counter(fld, decimal-leading-zero);\n  font-family:'JetBrains Mono', monospace; font-size:10.5px;\n  color:var(--violet); background:rgba(167,139,250,.12);\n  border:1px solid rgba(167,139,250,.30); border-radius:7px;\n  padding:3px 8px; line-height:1;\n}\n.form-label.form-required{ color:#cfdcef; }\n.form-required::after{ color:var(--cyan); font-weight:700; }\n\n.form-input, .select-input select, select, textarea{\n  width:100%; box-sizing:border-box;\n  background:var(--field); color:var(--ink);\n  border:1px solid var(--line); border-radius:12px;\n  padding:13px 15px; font-size:14.5px; font-family:inherit;\n  direction:rtl; text-align:right;\n  transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;\n}\ntextarea.form-input, textarea{ min-height:118px; line-height:1.9; resize:vertical; }\n\n.form-input:focus, .select-input select:focus, select:focus, textarea:focus{\n  outline:none; background:#0c1524;\n  border-color:var(--cyan); box-shadow:0 0 0 3px rgba(34,211,238,.16);\n}\n.form-input::placeholder, textarea::placeholder{ color:#40567a; font-size:13.5px; }\n\n.error-show{ color:#fb7185; font-size:12.5px; margin-top:6px; }\n\n#submit-btn{\n  width:100%; margin-top:30px; padding:15px;\n  border:0; border-radius:13px; cursor:pointer;\n  background:linear-gradient(90deg, var(--cyan), var(--violet));\n  color:#05131c; font-family:inherit; font-size:15px; font-weight:700;\n  letter-spacing:.01em;\n  transition:filter .15s ease, transform .12s ease;\n}\n#submit-btn:hover{ filter:brightness(1.09); }\n#submit-btn:active{ transform:translateY(1px); }\n\n.test-notice{\n  background:rgba(167,139,250,.10); border:1px solid rgba(167,139,250,.30);\n  color:#c9b8ff; border-radius:12px; padding:10px 14px;\n  font-size:12.5px; direction:rtl; text-align:right; margin-bottom:16px;\n}\n.n8n-link{ opacity:.35; font-size:11px; }\n.n8n-link a{ color:var(--dim); }\n\n#submitted-header{ color:#fff; font-size:22px; }\n#submitted-content{ color:var(--muted); line-height:2; }"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -1072,
+        416
+      ],
+      "id": "cabfdc91-5ebf-4922-9eb4-e177b2241538",
+      "name": "Article Intake",
+      "webhookId": "3c255400-3baa-458c-8973-a9b908252236"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "topic",
+              "value": "={{ $json['موضوع المقال'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f2",
+              "name": "articleType",
+              "value": "={{ $json['نوع المقال'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f3",
+              "name": "keyPoints",
+              "value": "={{ $json['النقاط المطلوب تغطيتها'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f4",
+              "name": "audience",
+              "value": "={{ $json['الجمهور المستهدف'] || 'قرّاء عامّون' }}",
+              "type": "string"
+            },
+            {
+              "id": "f5",
+              "name": "tone",
+              "value": "={{ $json['نبرة الكتابة'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f6",
+              "name": "language",
+              "value": "={{ $json['اللغة'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f7",
+              "name": "wordCount",
+              "value": "={{ $json['عدد الكلمات التقريبي'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f8",
+              "name": "stageDone",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -896,
+        416
+      ],
+      "id": "9c60c90b-7f9a-4117-b84b-25a7de517712",
+      "name": "Brief Builder"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "الحالة الحالية: {{ $json.output ? ($json.output.stageDone || 'لا شيء') : 'لا شيء' }}\nموضوع المقال: {{ $('Brief Builder').first().json.topic }}\nنوع المقال: {{ $('Brief Builder').first().json.articleType }}\nالنقاط المطلوبة: {{ $('Brief Builder').first().json.keyPoints }}",
+        "options": {
+          "systemMessage": "أنت «رئيس التحرير» (Root Agent) في نظام متعدد الإيجنتات مهمته إنتاج مقال جاهز للنشر.\nدورك تنسيقي فقط: أنت لا تكتب خطة ولا تكتب مقالاً، أنت تقرر الخطوة التالية بناءً على حالة العمل.\n\nقواعد القرار (اتبعها حرفياً):\n1) إذا كانت «الحالة الحالية» = لا شيء  → لا توجد خطة تحريرية بعد → القرار: PLAN\n2) إذا كانت «الحالة الحالية» = plan → الخطة اعتُمدت من مدقق الخطة → القرار: WRITE\n3) إذا كانت «الحالة الحالية» = draft → المسودة اعتُمدت من مدقق المسودة → القرار: DELIVER\n\nمخرجاتك: كلمة واحدة فقط بحروف إنجليزية كبيرة، بدون أي شرح أو علامات ترقيم أو أسطر إضافية.\nالقيم المسموحة: PLAN أو WRITE أو DELIVER"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -592,
+        416
+      ],
+      "id": "e2e89cc1-2428-4a74-b784-ff35907b48da",
+      "name": "Lead Editor"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c1",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "PLAN",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "١ ← إلى المخطط"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c2",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "WRITE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "٢ ← إلى الكاتب"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c3",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "DELIVER",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "٣ ← تسليم نهائي"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -240,
+        400
+      ],
+      "id": "5aa53d63-2bd7-4ea9-8603-369caf7a8310",
+      "name": "Task Dispatcher"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "موضوع المقال: {{ $('Brief Builder').first().json.topic }}\nنوع المقال (التزم بقالبه): {{ $('Brief Builder').first().json.articleType }}\nالنقاط المطلوب تغطيتها (إلزامية): {{ $('Brief Builder').first().json.keyPoints }}\nالجمهور المستهدف: {{ $('Brief Builder').first().json.audience }}\nنبرة الكتابة: {{ $('Brief Builder').first().json.tone }}\nاللغة: {{ $('Brief Builder').first().json.language }}\nعدد الكلمات التقريبي للمقال: {{ $('Brief Builder').first().json.wordCount }}\n\nملاحظات المراجع على المحاولة السابقة: {{ $json.output.feedback || 'لا يوجد — هذه المحاولة الأولى' }}\nالخطة السابقة: {{ $json.output.plan || 'لا يوجد' }}",
+        "options": {
+          "systemMessage": "أنت «المخطِّط التحريري» (Planner Agent). مهمتك إنتاج خطة مقال كاملة وقابلة للتنفيذ، ولست مسؤولاً عن كتابة نص المقال.\n\nيجب أن تحتوي الخطة على:\n1. ثلاثة عناوين مقترحة جذابة، مع تحديد الأفضل ولماذا.\n2. الزاوية التحريرية (Angle): ما الجديد أو المثير في معالجة هذا الموضوع لهذا الجمهور تحديداً.\n3. المقدمة الخطّافة (Hook): فكرتها في سطرين (سؤال، مفارقة، موقف، رقم لافت).\n4. هيكل كامل بالعناوين الفرعية مع عدد كلمات تقريبي لكل قسم، متوافق مع «نوع المقال»:\n   - مقال مدوّنة/تعريفي: مقدمة → محاور مشروحة بأمثلة → خلاصة عملية.\n   - مقال رأي: مقدمة → الأطروحة → أدلة داعمة → الرأي المخالف والرد عليه → خاتمة.\n   - دليل عملي (How-to): مقدمة → المتطلبات → خطوات مرقّمة قابلة للتنفيذ → أخطاء شائعة → خلاصة.\n   - تحليل إخباري: ماذا حدث → السياق → لماذا يهم → السيناريوهات المتوقعة.\n   - قائمة (Listicle): مقدمة قصيرة → عناصر مرقّمة متوازنة الطول → خاتمة.\n5. جدول تغطية النقاط: لكل نقطة من «النقاط المطلوب تغطيتها» اذكر في أي قسم ستُعالَج وكيف. لا تترك أي نقطة بدون موضع صريح.\n6. تحت كل قسم: 3–5 أفكار رئيسية، مع اقتراح مثال أو قصة أو رقم يدعمها.\n7. الخاتمة ودعوة للتفاعل (CTA) مناسبة للجمهور.\n8. نوع المصادر أو الجهات التي يُستحسن الإشارة إليها (تقارير، دراسات، جهات معروفة) — إشارة عامة فقط بلا صيغ أكاديمية.\n\nقواعد صارمة:\n- تغطية كل نقطة من النقاط المطلوبة شرط إلزامي؛ الخطة التي تُغفل نقطة تُعتبر ناقصة.\n- الخطة يجب أن تناسب «نوع المقال» و«النبرة» و«الجمهور» المحددين.\n- ممنوع الأسلوب الأكاديمي: لا منهجية بحث، ولا إطار نظري، ولا فرضيات، ولا قائمة مراجع بصيغة APA.\n- إذا وصلتك «ملاحظات المراجع»، فمهمتك تعديل «الخطة السابقة» ومعالجة كل ملاحظة نقطة بنقطة، مع الاحتفاظ بما كان جيداً، ثم إخراج الخطة الكاملة المحدَّثة (وليس التعديلات فقط).\n- اكتب بلغة المستخدم المحددة.\n- أخرج نص الخطة فقط، بدون مقدمات مثل «إليك الخطة»."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        96,
+        0
+      ],
+      "id": "29cd0a65-5c56-4545-a040-f6d9bd9fab4e",
+      "name": "Outline Designer"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "النقاط المطلوب تغطيتها (المرجع الذي تحاسب عليه): {{ $('Brief Builder').first().json.keyPoints }}\nنوع المقال: {{ $('Brief Builder').first().json.articleType }}\nالجمهور المستهدف: {{ $('Brief Builder').first().json.audience }}\nاللغة: {{ $('Brief Builder').first().json.language }}\n\nالخطة المقدمة من المخطّط:\n{{ $json.output }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "أنت «مدقّق الخطة التحريرية» (Plan Checker). دورك رقابي صارم ولست كاتباً.\n\nمهمتك: التحقق من أن «الخطة المقدمة» تغطي كل نقطة من «النقاط المطلوب تغطيتها» تغطية صريحة وكافية، وأن الهيكل مناسب لـ«نوع المقال» وجذاب للجمهور المحدد.\n\nخطوات عملك:\n1. فكّك «النقاط المطلوب تغطيتها» إلى قائمة نقاط مفردة.\n2. ابحث عن كل نقطة داخل الخطة: هل لها قسم أو فكرة صريحة تعالجها؟ الإشارة العابرة لا تُعد تغطية.\n3. سجّل كل نقطة غير مغطاة في missingConcepts.\n4. تحقق أيضاً من: وجود عناوين مقترحة جذابة، وزاوية تحريرية واضحة، ومقدمة خطّافة، وخاتمة/دعوة للتفاعل، وتوافق الهيكل مع نوع المقال.\n\nقواعد الاعتماد:\n- approved = true فقط إذا كانت missingConcepts فارغة تماماً ولا توجد ثغرة هيكلية جوهرية.\n- approved = false إذا نقصت ولو نقطة واحدة، أو إذا كان الهيكل أكاديمياً لا تحريرياً (منهجية، إطار نظري، مراجع APA).\n- لا تجامل ولا تعتمد خطة ناقصة، ولا ترفض بسبب أمور تجميلية.\n\nفي حالة الرفض: اكتب في feedback ملاحظات محددة قابلة للتنفيذ (ماذا ينقص، وأين يُضاف بالضبط)، رقّمها.\nفي حالة الاعتماد: اكتب في feedback كلمة «معتمدة».\n\nفي الحقل plan: أعد نص الخطة كاملاً كما استلمته (بدون تعديل) — هذا الحقل هو ما ستعتمد عليه بقية المراحل.\nالحقل stageDone = \"plan\" دائماً."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        512,
+        0
+      ],
+      "id": "3101f1ec-4146-4750-b667-5c4b51b21dd8",
+      "name": "Outline Reviewer"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"approved\": {\n      \"type\": \"boolean\",\n      \"description\": \"true فقط إذا كانت كل النقاط المطلوبة مغطاة والهيكل تحريري مناسب لنوع المقال\"\n    },\n    \"missingConcepts\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"النقاط غير المغطاة في الخطة\"\n    },\n    \"feedback\": {\n      \"type\": \"string\",\n      \"description\": \"ملاحظات مرقّمة قابلة للتنفيذ، أو كلمة معتمدة\"\n    },\n    \"plan\": {\n      \"type\": \"string\",\n      \"description\": \"نص خطة المقال كاملاً كما استُلم\"\n    },\n    \"stageDone\": {\n      \"type\": \"string\",\n      \"description\": \"دائماً القيمة plan\"\n    }\n  },\n  \"required\": [\n    \"approved\",\n    \"missingConcepts\",\n    \"feedback\",\n    \"plan\",\n    \"stageDone\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        224
+      ],
+      "id": "7e0b005b-a6b3-4c42-8130-2b948651d170",
+      "name": "Outline Review Schema"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "p1",
+              "leftValue": "={{ $json.output.approved }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "bd57f52c-bdbc-44f3-a4b7-c70c2246f3e6",
+      "name": "Outline Ready?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "الخطة المعتمدة (التزم بها حرفياً):\n{{ $('Outline Reviewer').first().json.output.plan }}\n\nنوع المقال: {{ $('Brief Builder').first().json.articleType }}\nالجمهور المستهدف: {{ $('Brief Builder').first().json.audience }}\nنبرة الكتابة: {{ $('Brief Builder').first().json.tone }}\nاللغة: {{ $('Brief Builder').first().json.language }}\nعدد الكلمات التقريبي: {{ $('Brief Builder').first().json.wordCount }}\n\nملاحظات المراجع على المسودة السابقة: {{ $json.output.feedback || 'لا يوجد — هذه المحاولة الأولى' }}\nالمسودة السابقة: {{ $json.output.draft || 'لا يوجد' }}",
+        "options": {
+          "systemMessage": "أنت «كاتب المقالات» (Writer Agent). مهمتك كتابة المقال كاملاً بناءً على «الخطة المعتمدة»، ولست مخوّلاً بتغيير الخطة.\n\nقواعد الكتابة:\n- ابدأ بالعنوان الذي اختارته الخطة، ثم مقدمة خطّافة من 2–4 أسطر تشدّ القارئ من أول سطر.\n- التزم بأقسام الخطة وترتيبها وعناوينها الفرعية وعدد الكلمات التقريبي لكل قسم.\n- اكتب بأسلوب تحريري سلس يناسب «نوع المقال» و«النبرة» و«الجمهور»: جمل قصيرة، فقرات من 2–4 أسطر، مخاطبة مباشرة للقارئ، أمثلة واقعية وقصص قصيرة وأرقام لافتة.\n- استخدم عناوين فرعية واضحة، وقوائم نقطية أو خطوات مرقّمة حيث تفيد القراءة السريعة.\n- ممنوع الأسلوب الأكاديمي: لا منهجية، ولا إطار نظري، ولا لغة جافة، ولا قائمة مراجع بصيغة APA أو أرقام DOI.\n- المصادر: أشر إليها بشكل عام داخل النص أو في سطر «مصادر للاستزادة» (اسم الجهة أو التقرير فقط). لا تختلق أرقاماً ولا اقتباسات ولا روابط؛ إن لم تتأكد اكتفِ بالإشارة العامة.\n- اختم بخلاصة عملية ودعوة للتفاعل (CTA) كما في الخطة.\n- إذا وصلتك «ملاحظات المراجع»، عدّل «المسودة السابقة» بمعالجة كل ملاحظة، ثم أخرج المسودة الكاملة المحدَّثة لا التعديلات فقط.\n- أخرج نص المقال فقط بتنسيق Markdown، بدون مقدمات أو تعليقات عن عملك."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        96,
+        800
+      ],
+      "id": "30523677-603e-457a-a4ca-3695c9430d36",
+      "name": "Article Writer"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "الخطة المعتمدة (المرجع الذي تحاسب عليه):\n{{ $('Outline Reviewer').first().json.output.plan }}\n\nنوع المقال: {{ $('Brief Builder').first().json.articleType }}\nنبرة الكتابة: {{ $('Brief Builder').first().json.tone }}\nالجمهور المستهدف: {{ $('Brief Builder').first().json.audience }}\nعدد الكلمات المطلوب: {{ $('Brief Builder').first().json.wordCount }}\n\nالمسودة المقدمة من الكاتب:\n{{ $json.output }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "أنت «مدقّق المسودة» (Draft Checker). دورك رقابي صارم ولست كاتباً.\n\nقيّم «المسودة» مقابل «الخطة المعتمدة» وفق المعايير التالية:\n1. الالتزام بالهيكل: العنوان وكل قسم في الخطة موجود فعلاً في المقال.\n2. تغطية المحتوى: كل نقطة وفكرة رئيسية في الخطة عولجت فعلاً وليس مجرد ذكرها.\n3. الطول: قريب من عدد الكلمات المطلوب (تفاوت ±20% مقبول).\n4. الجودة التحريرية: مقدمة خطّافة فعلاً، إيقاع وفقرات قصيرة، لغة سلسة، أمثلة ملموسة، بلا حشو ولا تكرار، وخاتمة بدعوة للتفاعل.\n5. ملاءمة النوع والنبرة والجمهور، وخلوّ النص من الأسلوب الأكاديمي (منهجية، إطار نظري، مراجع APA/DOI) ومن أي مصدر أو رقم يبدو مختلقاً.\n\nقواعد الاعتماد:\n- approved = true فقط إذا استوفت المسودة المعايير الخمسة.\n- approved = false إذا اختلّ أي معيار جوهري، وسجّل الاختلالات في issues.\n- في حالة الرفض اكتب في feedback ملاحظات مرقّمة ومحددة (أي قسم، وما المطلوب إصلاحه بالضبط).\n- في حالة الاعتماد اكتب في feedback كلمة «معتمدة».\n\nفي الحقل draft: أعد نص المقال كاملاً كما استلمته بدون اختصار — هذا هو النص الذي سيُسلَّم للمستخدم.\nالحقل stageDone = \"draft\" دائماً."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        512,
+        800
+      ],
+      "id": "f67fd1ac-397e-413d-a1cf-651ae7cff006",
+      "name": "Quality Reviewer"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"approved\": {\n      \"type\": \"boolean\",\n      \"description\": \"true فقط إذا استوفى المقال كل المعايير\"\n    },\n    \"issues\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      },\n      \"description\": \"قائمة الاختلالات\"\n    },\n    \"feedback\": {\n      \"type\": \"string\",\n      \"description\": \"ملاحظات مرقّمة قابلة للتنفيذ، أو كلمة معتمدة\"\n    },\n    \"draft\": {\n      \"type\": \"string\",\n      \"description\": \"نص المقال كاملاً كما استُلم\"\n    },\n    \"stageDone\": {\n      \"type\": \"string\",\n      \"description\": \"دائماً القيمة draft\"\n    }\n  },\n  \"required\": [\n    \"approved\",\n    \"issues\",\n    \"feedback\",\n    \"draft\",\n    \"stageDone\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        1024
+      ],
+      "id": "fc6fed15-d66f-4a6e-bd21-7d713d3d1d64",
+      "name": "Quality Review Schema"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d1",
+              "leftValue": "={{ $json.output.approved }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        800
+      ],
+      "id": "3d761fe4-2e65-4c9d-9c13-ee412e08f768",
+      "name": "Draft Ready?"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "تم تسليم المقال ✅",
+        "completionMessage": "={{ $('Quality Reviewer').first().json.output.draft }}",
+        "options": {
+          "customCss": "@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap');\n\n:root{\n  --paper:#fbfaf6; --paper-line:#e5e0d4;\n  --text:#1c1c1a; --text-soft:#4a4a45;\n  --cyan:#0e7490; --violet:#6d28d9;\n}\n\nbody{\n  background:\n    radial-gradient(1000px 560px at 80% -10%, #1a2c4a 0%, rgba(7,12,21,0) 60%),\n    #070c15;\n  background-attachment:fixed;\n  font-family:'IBM Plex Sans Arabic', system-ui, sans-serif;\n  padding:44px 18px;\n}\n\n.container{ max-width:860px; margin:0 auto; }\n\n#submitted-form, .card{\n  background:var(--paper);\n  border:1px solid var(--paper-line);\n  border-radius:8px;\n  padding:56px 60px 48px;\n  box-shadow:0 34px 90px rgba(0,0,0,.55);\n  direction:rtl; text-align:right;\n  position:relative; overflow:hidden;\n}\n#submitted-form::before{\n  content:'HW1 · MULTI-AGENT ARTICLE LAB — EDITOR-REVIEWED OUTPUT';\n  display:block; direction:ltr; text-align:left;\n  font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.18em;\n  color:var(--cyan);\n  padding-bottom:14px; margin-bottom:26px;\n  border-bottom:2px solid var(--text);\n}\n\n#submitted-header{\n  margin:0 0 10px;\n  font-family:'Noto Naskh Arabic', serif;\n  font-size:29px; font-weight:700; line-height:1.6; color:var(--text);\n}\n\n#submitted-form::after{\n  content:'أُنتج هذا المقال آليًا عبر خمسة إيجنتات: Lead Editor · Outline Designer · Outline Reviewer · Article Writer · Quality Reviewer — مع حلقتَي مراجعة متكررتين حتى اعتماد الخطة التحريرية ثم اعتماد المسودة.';\n  display:block; direction:rtl;\n  font-size:11.5px; line-height:2.1; color:var(--text-soft);\n  border-right:3px solid var(--violet); padding-right:12px;\n  margin-top:34px; padding-top:2px;\n}\n\n#submitted-content{\n  white-space:pre-wrap;\n  font-family:'Noto Naskh Arabic', serif;\n  font-size:16px; line-height:2.25; color:var(--text);\n  text-align:justify;\n  border-top:1px solid var(--paper-line);\n  padding-top:28px;\n}\n\n.n8n-link{ opacity:.3; font-size:11px; }\n.n8n-link a{ color:#63799b; }\n.test-notice{\n  background:rgba(167,139,250,.10); border:1px solid rgba(167,139,250,.30);\n  color:#c9b8ff; border-radius:12px; padding:10px 14px;\n  font-size:12.5px; direction:rtl; text-align:right; margin-bottom:16px;\n}\n\n@media print{\n  body{ background:#fff !important; padding:0 !important; }\n  .container{ max-width:none !important; }\n  #submitted-form, .card{\n    box-shadow:none !important; border:0 !important; border-radius:0 !important;\n    padding:0 !important; background:#fff !important;\n  }\n  #submitted-content{ font-size:12.5pt; line-height:1.95; }\n  #submitted-header{ font-size:20pt; }\n  .test-notice, .n8n-link{ display:none !important; }\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        448
+      ],
+      "id": "a9852d88-5c6f-459f-9828-72e1d5e14bd8",
+      "name": "Final Handover",
+      "webhookId": "a1b2c3d4-1111-2222-3333-444455556666"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "4a76991b-44db-47fa-be24-b2a815e20cb4",
+      "name": "Gemini · Editor",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        608
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BC68qJho1liU686F",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "69db2360-aca7-4cd2-b557-012675c60b9b",
+      "name": "Gemini · Outline",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        96,
+        224
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "MLBSn1fPTz2Qfudp",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "60a938ce-0db0-40c3-941c-27be6ce88a88",
+      "name": "Gemini · Outline Review",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        512,
+        224
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BC68qJho1liU686F",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "0479a93a-6d7a-4067-92d7-753cacc7c948",
+      "name": "Gemini · Article Writer",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        96,
+        1024
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BC68qJho1liU686F",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "e2bf36d2-a975-4eb6-aab3-814cfd470d21",
+      "name": "Gemini · Quality Review",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        512,
+        1024
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BC68qJho1liU686F",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 1 · Intake & Orchestration\nCaptures the article request (topic, article type, key points, audience, tone, length), turns it into one clean brief, and hands control to the editor agent that owns the whole run.",
+        "height": 544,
+        "width": 912,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        224
+      ],
+      "id": "sticky-hw1-2-15838",
+      "name": "Note · Stage 1"
+    },
+    {
+      "parameters": {
+        "content": "## 2 · Planning Lane — Editorial Outline Loop\nHeadlines, angle, hook and section structure are drafted, reviewed and sent back for revision until every required point is covered and the shape fits the chosen article type.",
+        "height": 560,
+        "width": 1360,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -176
+      ],
+      "id": "sticky-hw1-7-55433",
+      "name": "Note · Stage 2"
+    },
+    {
+      "parameters": {
+        "content": "## 3 · Writing Lane — Draft Loop\nThe approved outline becomes engaging editorial prose, is quality-checked (structure, coverage, length, readability, tone), and is rewritten until it passes.",
+        "height": 560,
+        "width": 1392,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        640
+      ],
+      "id": "sticky-hw1-11-87109",
+      "name": "Note · Stage 3"
+    },
+    {
+      "parameters": {
+        "content": "### Final Handover\nDelivers the finished, edited article back to the user and closes the run.",
+        "height": 120,
+        "width": 300,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        304
+      ],
+      "id": "sticky-hw1-15-118785",
+      "name": "Note · Final Handover"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Brief Builder": {
+      "main": [
+        [
+          {
+            "node": "Lead Editor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Task Dispatcher": {
+      "main": [
+        [
+          {
+            "node": "Outline Designer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Article Writer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Final Handover",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outline Designer": {
+      "main": [
+        [
+          {
+            "node": "Outline Reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outline Reviewer": {
+      "main": [
+        [
+          {
+            "node": "Outline Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outline Ready?": {
+      "main": [
+        [
+          {
+            "node": "Lead Editor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Outline Designer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Reviewer": {
+      "main": [
+        [
+          {
+            "node": "Draft Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Ready?": {
+      "main": [
+        [
+          {
+            "node": "Lead Editor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Article Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outline Review Schema": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Outline Reviewer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Review Schema": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Quality Reviewer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · Outline": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Outline Designer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · Outline Review": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Outline Reviewer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · Quality Review": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Quality Reviewer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Intake": {
+      "main": [
+        [
+          {
+            "node": "Brief Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Editor": {
+      "main": [
+        [
+          {
+            "node": "Task Dispatcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Writer": {
+      "main": [
+        [
+          {
+            "node": "Quality Reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · Editor": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Lead Editor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · Article Writer": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Article Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "174e16e0-652c-4ed3-a7ac-a1813ab7329f",
+  "meta": {
+    "instanceId": "67898ee803dd0fc0248915135f1489ad3e867ee3248a0d8e76a43bbf7cf366a5"
+  },
+  "nodeGroups": [],
+  "id": "twmikHpRiS4qdrjP",
+  "tags": []
+}
